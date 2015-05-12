@@ -16,6 +16,7 @@
             flatExtraClasses = options.extraClasses.join(' '),
             totalForms = $('#id_' + options.prefix + '-TOTAL_FORMS'),
             maxForms = $('#id_' + options.prefix + '-MAX_NUM_FORMS'),
+            minForms = $('#id_' + options.prefix + '-MIN_NUM_FORMS'),
             childElementSelector = 'input,select,textarea,label,div',
             $$ = $(this),
 
@@ -109,6 +110,7 @@
                     del.before('<input type="hidden" name="' + del.attr('name') +'" id="' + del.attr('id') +'" value="on" />');
                     row.hide();
                 } else {
+
                     del.before('<input type="hidden" name="' + del.attr('name') +'" id="' + del.attr('id') +'" />');
                 }
                 // Hide any labels associated with the DELETE checkbox:
@@ -118,7 +120,10 @@
             if (hasChildElements(row)) {
                 row.addClass(options.formCssClass);
                 if (row.is(':visible')) {
-                    insertDeleteLink(row);
+                    //get minimum form and do not input delete link to new form
+                    if ( i >= minForms.val()){
+                        insertDeleteLink(row);
+                    }
                     applyExtraClasses(row, i);
                 }
             }
@@ -137,7 +142,7 @@
                 insertDeleteLink(template);
             } else {
                 // Otherwise, use the last form in the formset; this works much better if you've got
-                // extra (>= 1) forms (thnaks to justhamade for pointing this out):
+                // extra (>= 1) forms (thanks to justhamade for pointing this out):
                 template = $('.' + options.formCssClass + ':last').clone(true).removeAttr('id');
                 template.find('input:hidden[id $= "-DELETE"]').remove();
                 // Clear all cloned fields, except those the user wants to keep (thanks to brunogola for the suggestion):
